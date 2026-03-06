@@ -61,11 +61,34 @@ header img.header-logo {
   width: 8rem;
 }
 
+header .header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-right: 0.75rem;
+}
+
+header button.manifest-launch {
+  border: 1px solid color-mix(in oklab, var(--buttonPrimary), #fff 18%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--bannerBackground), #fff 4%) 0%,
+    color-mix(in oklab, var(--bannerBackground), #000 9%) 100%
+  );
+  color: var(--textPrimary);
+  box-shadow: unset;
+  border-radius: 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.45rem 0.62rem;
+}
+
 header button.logout-button {
   background-color: transparent;
   box-shadow: unset;
   border: none;
-  padding-right: 1rem;
+  padding-right: 0;
   font-size: 1.2rem;
   color: var(--buttonPrimary);
   text-decoration: underline;
