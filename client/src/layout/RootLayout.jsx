@@ -47,7 +47,7 @@ const RootLayout = () => {
                   window.location.href = `https://manifest.blutape.net/?return_to=${encodeURIComponent(returnTo)}`;
                 }}
               >
-                Open Manifest
+                Manifest Destiny
               </button>
             )}
             <button className="logout-button" onClick={logout}>
