@@ -38,16 +38,18 @@ const RootLayout = () => {
         </Link>
         {user && (
           <div className="header-actions">
-            <button
-              type="button"
-              className="manifest-launch"
-              onClick={() => {
-                const returnTo = `${window.location.origin}${location.pathname}${location.search}${location.hash}`;
-                window.location.href = `https://manifest.blutape.net/?return_to=${encodeURIComponent(returnTo)}`;
-              }}
-            >
-              Open Manifest
-            </button>
+            {user?.role === "admin" && (
+              <button
+                type="button"
+                className="manifest-launch"
+                onClick={() => {
+                  const returnTo = `${window.location.origin}${location.pathname}${location.search}${location.hash}`;
+                  window.location.href = `https://manifest.blutape.net/?return_to=${encodeURIComponent(returnTo)}`;
+                }}
+              >
+                Open Manifest
+              </button>
+            )}
             <button className="logout-button" onClick={logout}>
               <FontAwesomeIcon icon={faRightFromBracket} />
             </button>
