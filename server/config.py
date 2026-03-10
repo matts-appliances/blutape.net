@@ -41,3 +41,14 @@ class Config:
     ADMIN_EMAIL = environ.get("ADMIN_EMAIL", "cameron@mattsappliancesla.net")
 
     MANIFEST_DESTINY_INTEGRATION_KEY = environ.get("MANIFEST_DESTINY_INTEGRATION_KEY")
+    MANIFEST_DESTINY_BASE_URL = environ.get(
+        "MANIFEST_DESTINY_BASE_URL",
+        "https://manifest.blutape.net",
+    )
+    MANIFEST_DESTINY_ACCESS_SECRET = (
+        environ.get("MANIFEST_DESTINY_ACCESS_SECRET")
+        or MANIFEST_DESTINY_INTEGRATION_KEY
+    )
+    MANIFEST_DESTINY_ACCESS_TOKEN_MAX_AGE = int(
+        environ.get("MANIFEST_DESTINY_ACCESS_TOKEN_MAX_AGE", "300")
+    )

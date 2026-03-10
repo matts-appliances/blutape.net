@@ -3,8 +3,16 @@ from app.extensions import db, bcrypt
 from app.models import User
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime, timezone
+from itsdangerous import URLSafeTimedSerializer
 
 auth_bp = Blueprint("auth", __name__)
+
+
+def _manifest_access_serializer():
+    secret = current_app.config.get("MANIFEST_DESTINY_ACCESS_SECRET")
+    if not secret:
+        raise RuntimeError("MANIFEST_DESTINY_ACCESS_SECRET is not configured")
+    return URLSafeTimedSerializer(secret_key=secret, salt="manifest-destiny-access")
 
 
 @auth_bp.post("/register")
@@ -105,3 +113,36 @@ def logout():
 @login_required
 def hydrate():
     return jsonify(success=True, user=current_user.serialize()), 200
+
+
+@auth_bp.get("/manifest-access")
+@login_required
+def manifest_access():
+    try:
+        serializer = _manifest_access_serializer()
+        token = serializer.dumps(
+            {
+                "id": current_user.id,
+                "email": current_user.email,
+                "first_name": current_user.first_name,
+                "last_name": current_user.last_name,
+                "role": str(current_user.role),
+            }
+        )
+        return (
+            jsonify(
+                success=True,
+                payload={
+                    "token": token,
+                    "base_url": current_app.config.get("MANIFEST_DESTINY_BASE_URL"),
+                    "expires_in": current_app.config.get(
+                        "MANIFEST_DESTINY_ACCESS_TOKEN_MAX_AGE",
+                        300,
+                    ),
+                },
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"[MANIFEST ACCESS ERROR]: {e}")
+        return jsonify(success=False, message="Unable to create manifest access token"), 500
