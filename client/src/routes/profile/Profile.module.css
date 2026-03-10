@@ -36,4 +36,37 @@
   margin-top: 1rem;
   font-size: 2rem;
   border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+
+.profileDangerZone {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in oklab, #8d3340, var(--buttonPrimary) 35%);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--backgroundDark), #8d3340 10%);
+  color: var(--textPrimary);
+}
+
+.profileDangerZone p {
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.logoutButton {
+  width: 100%;
+  border: 1px solid color-mix(in oklab, #d26a77, var(--backgroundDark) 30%);
+  border-radius: 8px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, #a84857, #fff 12%) 0%,
+    color-mix(in oklab, #7e2f3d, #000 8%) 100%
+  );
+  color: var(--textPrimary);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1rem;
+  box-shadow: none;
 }

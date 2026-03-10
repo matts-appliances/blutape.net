@@ -3,47 +3,55 @@ div.applianceCatGroup {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.3rem;
 }
 
 label.applianceCatLabel {
   width: 92%;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.09rem;
-  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  text-transform: none;
+  color: inherit;
+  text-shadow: none;
+}
+
+p.applianceCatHint {
+  width: 92%;
+  margin: 0 0 0.15rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
   color: var(--textPrimary);
+  font-weight: 600;
+  font-style: italic;
+  opacity: 0.82;
 }
 
 select.applianceCat {
   width: 92%;
-  min-height: 4rem;
-  padding: 0.9rem 3.4rem 0.9rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--linkText) 70%, white 30%);
-  border-radius: 10px;
+  min-height: 3.15rem;
+  padding: 0.72rem 2.8rem 0.68rem 0.9rem;
+  border: none;
+  border-left: 2px solid color-mix(in srgb, var(--linkText) 62%, white 38%);
+  border-bottom: 2px solid color-mix(in srgb, var(--buttonPrimary) 54%, white 46%);
+  border-radius: 0 0 10px 10px;
   background:
     linear-gradient(
         45deg,
         transparent 50%,
-        color-mix(in srgb, var(--linkText) 70%, white 30%) 50%
-      )
-      calc(100% - 1.15rem) calc(50% - 2px) / 8px 8px no-repeat,
+        color-mix(in srgb, var(--linkText) 62%, white 38%) 50%
+      ) calc(100% - 0.95rem) calc(50% - 2px) / 7px 7px no-repeat,
     linear-gradient(
         135deg,
-        color-mix(in srgb, var(--linkText) 70%, white 30%) 50%,
+        color-mix(in srgb, var(--linkText) 62%, white 38%) 50%,
         transparent 50%
-      )
-      calc(100% - 0.8rem) calc(50% - 2px) / 8px 8px no-repeat,
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--buttonPrimary) 82%, white 18%),
-      var(--buttonPrimary)
-    );
-  box-shadow: -1px 1px 6px rgb(0 0 0 / 55%);
+      ) calc(100% - 0.63rem) calc(50% - 2px) / 7px 7px no-repeat;
+  background-color: transparent;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 6%);
   color: var(--textPrimary);
-  font-size: 1.08rem;
-  font-weight: 700;
-  letter-spacing: 0.04rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
   line-height: 1.2;
   appearance: none;
   -webkit-appearance: none;
@@ -54,45 +62,54 @@ select.applianceCat {
 }
 
 select.applianceCat:hover {
-  border-color: var(--linkText);
+  box-shadow:
+    0 8px 16px rgb(0 0 0 / 8%);
+  border-left-color: color-mix(in srgb, var(--linkText) 74%, white 26%);
+  border-bottom-color: color-mix(in srgb, var(--buttonPrimary) 64%, white 36%);
 }
 
 select.applianceCat:focus-visible {
-  border-color: var(--linkText);
-  outline: 2px solid color-mix(in srgb, var(--linkText) 45%, transparent 55%);
+  outline: 2px solid color-mix(in srgb, var(--linkText) 18%, transparent 82%);
   outline-offset: 2px;
   box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--linkText) 18%, transparent 82%),
-    -1px 1px 6px rgb(0 0 0 / 55%);
+    0 0 0 4px color-mix(in srgb, var(--buttonPrimary) 10%, transparent 90%),
+    0 8px 16px rgb(0 0 0 / 8%);
+  border-left-color: color-mix(in srgb, var(--linkText) 80%, white 20%);
+  border-bottom-color: color-mix(in srgb, var(--buttonPrimary) 70%, white 30%);
   transform: translateY(-1px);
 }
 
 select.applianceCat option {
   background-color: #fff;
   color: #111;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 500;
   line-height: 1.35;
-  padding: 0.7rem 0.75rem;
+  padding: 0.5rem 0.65rem;
 }
 
 @media (min-width: 641px) {
   label.applianceCatLabel {
     width: min(80%, 780px);
-    font-size: 0.86rem;
-    letter-spacing: 0.08rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.06rem;
+  }
+
+  p.applianceCatHint {
+    width: min(80%, 780px);
+    font-size: 0.82rem;
   }
 
   select.applianceCat {
     width: min(80%, 780px);
-    min-height: 3.4rem;
-    padding: 0.75rem 3.25rem 0.75rem 1rem;
-    font-size: 1.05rem;
-    letter-spacing: 0.06rem;
+    min-height: 3rem;
+    padding: 0.68rem 2.7rem 0.64rem 0.9rem;
+    font-size: 0.98rem;
+    letter-spacing: 0.02rem;
   }
 
   select.applianceCat option {
     font-size: 1rem;
-    padding: 0.5rem 0.6rem;
+    padding: 0.45rem 0.6rem;
   }
 }

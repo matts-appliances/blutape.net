@@ -114,9 +114,14 @@ const Home = () => {
             name="form_factor"
             value={formData.form_factor}
             onChange={handleChange}
+            disabled={!applianceCategory}
             required
           >
-            <option value="">--select a style--</option>
+            <option value="">
+              {applianceCategory
+                ? "--select a style--"
+                : "--select a category first--"}
+            </option>
             {renderOptions(FORM_FACTOR(applianceCategory))}
           </select>
         </div>

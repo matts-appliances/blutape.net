@@ -37,6 +37,19 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    if (!confirm("Logout?")) return;
+
+    try {
+      const data = await requestJson("/api/auth/logout");
+      toast.success(data.message || "Logged out");
+      setUser(null);
+    } catch (error) {
+      console.error("[LOGOUT ERROR]: ", error);
+      toast.error(error.message || "Failed to logout");
+    }
+  };
+
   return (
     <div className={styles.profileContainer}>
       <h1>Profile</h1>
@@ -70,6 +83,16 @@ const Profile = () => {
 
         <button type="submit">Save Changes</button>
       </form>
+      <div className={styles.profileDangerZone}>
+        <p>Need to switch techs or end your session?</p>
+        <button
+          type="button"
+          className={styles.logoutButton}
+          onClick={handleLogout}
+        >
+          Log Out
+        </button>
+      </div>
     </div>
   );
 };

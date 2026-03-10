@@ -50,48 +50,71 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px var(--linkText);
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--bannerBackground), #fff 12%);
+  box-shadow: 0 8px 20px rgb(4 11 34 / 16%);
   position: sticky;
   top: 0;
-  background-color: var(--textSecondary);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--bannerBackground), #fff 10%) 0%,
+    color-mix(in oklab, var(--bannerBackground), #000 8%) 100%
+  );
   z-index: 1001;
 }
 
+header .header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
 header img.header-logo {
-  width: 8rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 18%));
+}
+
+header .header-brand-copy {
+  display: flex;
+  min-width: 0;
+  color: var(--textPrimary);
+}
+
+header .header-brand-copy strong {
+  font-size: 1.1rem;
+  letter-spacing: 0.08rem;
+  line-height: 1;
 }
 
 header .header-actions {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.55rem;
-  padding-right: 0.75rem;
+  margin-left: auto;
 }
 
 header button.manifest-launch {
-  border: 1px solid color-mix(in oklab, var(--buttonPrimary), #fff 18%);
+  border: 1px solid color-mix(in oklab, var(--linkText), #fff 14%);
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--bannerBackground), #fff 4%) 0%,
-    color-mix(in oklab, var(--bannerBackground), #000 9%) 100%
+    color-mix(in oklab, var(--linkText), #fff 10%) 0%,
+    color-mix(in oklab, var(--bannerBackground), #000 2%) 100%
   );
   color: var(--textPrimary);
-  box-shadow: unset;
-  border-radius: 9px;
-  font-size: 0.72rem;
+  box-shadow:
+    0 8px 18px rgb(0 0 0 / 14%),
+    inset 0 1px 0 rgb(255 255 255 / 14%);
+  border-radius: 999px;
+  font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 0.45rem 0.62rem;
-}
-
-header button.logout-button {
-  background-color: transparent;
-  box-shadow: unset;
-  border: none;
-  padding-right: 0;
-  font-size: 1.2rem;
-  color: var(--buttonPrimary);
-  text-decoration: underline;
+  letter-spacing: 0.05em;
+  padding: 0.62rem 0.95rem;
+  white-space: nowrap;
 }
 
 main {
@@ -111,4 +134,28 @@ button:active {
   box-shadow: unset;
   background-color: var(--bannerBackground);
   color: var(--linkText);
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: 0.7rem 0.85rem;
+  }
+
+  header .header-brand {
+    gap: 0.65rem;
+  }
+
+  header img.header-logo {
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+
+  header .header-brand-copy strong {
+    font-size: 1rem;
+  }
+
+  header button.manifest-launch {
+    font-size: 0.68rem;
+    padding: 0.58rem 0.78rem;
+  }
 }

@@ -7,6 +7,9 @@ const MachineBar = ({ applianceCategory, setApplianceCategory }) => {
       <label className={styles.applianceCatLabel} htmlFor="appliance_category">
         Appliance Category
       </label>
+      <p className={styles.applianceCatHint}>
+        Pick a category first to unlock the machine style options below.
+      </p>
       <select
         name="appliance_category"
         id="appliance_category"
