@@ -1,6 +1,6 @@
 from flask import jsonify, current_app, Blueprint, request, Response, render_template
 from app.extensions import db
-from app.models import Machine, User, WorkOrder, WorkOrderEvent
+from app.models import Machine, ManifestExport, User, WorkOrder, WorkOrderEvent
 from app.models.enums import EventEnum
 from flask_login import login_required, current_user
 from io import StringIO
@@ -12,6 +12,12 @@ import os
 
 
 export_bp = Blueprint("export", __name__)
+
+
+def _integration_authorized():
+    expected_key = current_app.config.get("MANIFEST_DESTINY_INTEGRATION_KEY")
+    provided_key = (request.headers.get("X-Integration-Key") or "").strip()
+    return bool(expected_key) and provided_key == expected_key
 
 
 def build_user_report(user_id, start_date, end_date):
@@ -114,8 +120,8 @@ def generate_user_report_pdf(report, start_date, end_date):
     )
     
 
-def build_completed_manifest_payload(manifest_date: date):
-    events = (
+def build_completed_manifest_payload(manifest_date: date, *, only_unexported: bool = True):
+    query = (
         db.session.query(WorkOrderEvent)
         .join(WorkOrder, WorkOrder.id == WorkOrderEvent.work_order_id)
         .join(Machine, Machine.id == WorkOrderEvent.machine_id)
@@ -124,8 +130,15 @@ def build_completed_manifest_payload(manifest_date: date):
             WorkOrderEvent.event_date == manifest_date,
         )
         .order_by(WorkOrderEvent.id.desc())
-        .all()
     )
+    if only_unexported:
+        query = query.outerjoin(
+            ManifestExport,
+            (ManifestExport.work_order_event_id == WorkOrderEvent.id)
+            & (ManifestExport.export_target == "manifest_destiny"),
+        ).filter(ManifestExport.id.is_(None))
+
+    events = query.all()
 
     seen_machine_ids = set()
     machines = []
@@ -165,6 +178,52 @@ def build_completed_manifest_payload(manifest_date: date):
     }
 
 
+def acknowledge_manifest_export(manifest_date: date, manifest_id: str, exported_items: list[dict]):
+    created_records = []
+    for idx, item in enumerate(exported_items):
+        if not isinstance(item, dict):
+            raise ValueError(f"items[{idx}] must be an object")
+
+        work_order_event_id = item.get("blutape_event_id")
+        machine_id = item.get("blutape_machine_id")
+        work_order_id = item.get("blutape_work_order_id")
+
+        try:
+            work_order_event_id = int(work_order_event_id)
+            machine_id = int(machine_id)
+            work_order_id = int(work_order_id)
+        except (TypeError, ValueError):
+            raise ValueError(f"items[{idx}] must include integer blutape ids")
+
+        existing = (
+            db.session.query(ManifestExport)
+            .filter_by(
+                work_order_event_id=work_order_event_id,
+                export_target="manifest_destiny",
+            )
+            .first()
+        )
+        if existing:
+            if not existing.exported_manifest_id:
+                existing.exported_manifest_id = manifest_id
+            created_records.append(existing)
+            continue
+
+        record = ManifestExport(
+            machine_id=machine_id,
+            work_order_id=work_order_id,
+            work_order_event_id=work_order_event_id,
+            export_target="manifest_destiny",
+            export_source_date=manifest_date,
+            exported_manifest_id=manifest_id,
+        )
+        db.session.add(record)
+        created_records.append(record)
+
+    db.session.commit()
+    return created_records
+
+
 @export_bp.route("/user_report/<int:id>", methods=["GET"])
 @login_required
 def export_user_report(id):
@@ -199,9 +258,12 @@ def export_user_report(id):
 
 
 @export_bp.get("/completed_manifest")
-@login_required
 def export_completed_manifest():
+    if not _integration_authorized():
+        return jsonify(success=False, message="Unauthorized"), 401
+
     manifest_date_raw = (request.args.get("date") or "").strip()
+    only_unexported_raw = (request.args.get("only_unexported") or "true").strip().lower()
     if not manifest_date_raw:
         return jsonify(success=False, message="date is required"), 400
 
@@ -210,5 +272,47 @@ def export_completed_manifest():
     except ValueError:
         return jsonify(success=False, message="date must be YYYY-MM-DD"), 400
 
-    payload = build_completed_manifest_payload(manifest_date)
+    only_unexported = only_unexported_raw not in {"false", "0", "no"}
+    payload = build_completed_manifest_payload(manifest_date, only_unexported=only_unexported)
     return jsonify(success=True, payload=payload), 200
+
+
+@export_bp.post("/completed_manifest/ack")
+def acknowledge_completed_manifest():
+    if not _integration_authorized():
+        return jsonify(success=False, message="Unauthorized"), 401
+
+    payload = request.get_json(silent=True) or {}
+    manifest_date_raw = (payload.get("manifest_date") or "").strip()
+    manifest_id = (payload.get("manifest_id") or "").strip()
+    items = payload.get("items")
+
+    if not manifest_date_raw:
+        return jsonify(success=False, message="manifest_date is required"), 400
+    if not manifest_id:
+        return jsonify(success=False, message="manifest_id is required"), 400
+    if not isinstance(items, list) or not items:
+        return jsonify(success=False, message="items must be a non-empty array"), 400
+
+    try:
+        manifest_date = date.fromisoformat(manifest_date_raw)
+    except ValueError:
+        return jsonify(success=False, message="manifest_date must be YYYY-MM-DD"), 400
+
+    try:
+        records = acknowledge_manifest_export(manifest_date, manifest_id, items)
+    except ValueError as exc:
+        db.session.rollback()
+        return jsonify(success=False, message=str(exc)), 400
+    except Exception as exc:
+        db.session.rollback()
+        return jsonify(success=False, message=f"Acknowledge failed: {exc}"), 500
+
+    return jsonify(
+        success=True,
+        payload={
+            "manifest_id": manifest_id,
+            "manifest_date": manifest_date.isoformat(),
+            "records": [record.serialize() for record in records],
+        },
+    ), 200

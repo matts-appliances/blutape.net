@@ -39,3 +39,5 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_DEFAULT_SENDER = "cameron@mattsappliancesla.net"
     ADMIN_EMAIL = environ.get("ADMIN_EMAIL", "cameron@mattsappliancesla.net")
+
+    MANIFEST_DESTINY_INTEGRATION_KEY = environ.get("MANIFEST_DESTINY_INTEGRATION_KEY")
