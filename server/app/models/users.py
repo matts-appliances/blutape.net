@@ -14,6 +14,7 @@ class User(Base, UserMixin):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     
     role: Mapped[RoleEnum] = mapped_column(RoleEnumSA, nullable=False, default=RoleEnum.TECHNICIAN)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     
     #----------relationships--------------
     initiated_work_orders = relationship("WorkOrder", back_populates="initiator", foreign_keys="WorkOrder.initiated_by")
