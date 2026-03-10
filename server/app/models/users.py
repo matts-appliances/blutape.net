@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, Boolean
 from .base import Base
 from .enums import RoleEnum, RoleEnumSA
 from flask_login import UserMixin
@@ -28,5 +28,6 @@ class User(Base, UserMixin):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-            "role": str(self.role)
+            "role": str(self.role),
+            "is_active": self.is_active
         }

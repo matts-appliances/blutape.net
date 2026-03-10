@@ -6,7 +6,9 @@ from flask_login import LoginManager
 from flask_session import Session
 from flask_mailman import Mail
 
-db = SQLAlchemy()
+from app.models import Base
+db = SQLAlchemy(model_class=Base)
+
 migrate = Migrate()
 bcrypt = Bcrypt()
 cors = CORS()
