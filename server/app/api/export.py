@@ -1,9 +1,10 @@
 from flask import jsonify, current_app, Blueprint, request, Response, render_template
 from app.extensions import db
-from app.models import Machine, User, WorkOrderEvent
+from app.models import Machine, User, WorkOrder, WorkOrderEvent
+from app.models.enums import EventEnum
 from flask_login import login_required, current_user
 from io import StringIO
-from datetime import datetime
+from datetime import datetime, date
 import csv
 import pdfkit
 import os
@@ -113,6 +114,57 @@ def generate_user_report_pdf(report, start_date, end_date):
     )
     
 
+def build_completed_manifest_payload(manifest_date: date):
+    events = (
+        db.session.query(WorkOrderEvent)
+        .join(WorkOrder, WorkOrder.id == WorkOrderEvent.work_order_id)
+        .join(Machine, Machine.id == WorkOrderEvent.machine_id)
+        .filter(
+            WorkOrderEvent.event_type == EventEnum.COMPLETED,
+            WorkOrderEvent.event_date == manifest_date,
+        )
+        .order_by(WorkOrderEvent.id.desc())
+        .all()
+    )
+
+    seen_machine_ids = set()
+    machines = []
+    for event in events:
+        if event.machine_id in seen_machine_ids:
+            continue
+
+        seen_machine_ids.add(event.machine_id)
+        machine = event.machine
+        work_order = event.work_order
+        if not machine:
+            continue
+
+        machines.append(
+            {
+                "blutape_machine_id": machine.id,
+                "blutape_work_order_id": work_order.id if work_order else None,
+                "blutape_event_id": event.id,
+                "completed_on": event.event_date.isoformat() if event.event_date else None,
+                "serial": machine.serial,
+                "brand": machine.brand,
+                "model": machine.model,
+                "category": str(machine.category) if machine.category else None,
+                "form_factor": machine.form_factor,
+                "color": machine.color,
+                "condition": str(machine.condition) if machine.condition else None,
+                "vendor": str(machine.vendor) if machine.vendor else None,
+                "description": f"{machine.brand} {machine.model}".strip(),
+            }
+        )
+
+    machines.reverse()
+    return {
+        "manifest_date": manifest_date.isoformat(),
+        "manifest_id": f"BLU-COMP-{manifest_date.strftime('%Y%m%d')}",
+        "machines": machines,
+    }
+
+
 @export_bp.route("/user_report/<int:id>", methods=["GET"])
 @login_required
 def export_user_report(id):
@@ -144,5 +196,19 @@ def export_user_report(id):
     else:
         current_app.logger.info(f"[EXPORT ERROR]: There was an error when exporting machine data for {user.first_name} {user.last_name}")
         return jsonify(success=False, message="Invalid format request."), 400
-        
-    
+
+
+@export_bp.get("/completed_manifest")
+@login_required
+def export_completed_manifest():
+    manifest_date_raw = (request.args.get("date") or "").strip()
+    if not manifest_date_raw:
+        return jsonify(success=False, message="date is required"), 400
+
+    try:
+        manifest_date = date.fromisoformat(manifest_date_raw)
+    except ValueError:
+        return jsonify(success=False, message="date must be YYYY-MM-DD"), 400
+
+    payload = build_completed_manifest_payload(manifest_date)
+    return jsonify(success=True, payload=payload), 200
