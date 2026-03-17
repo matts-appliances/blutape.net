@@ -9,7 +9,8 @@ div.applianceCatGroup {
 label.applianceCatLabel {
   width: 92%;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
   letter-spacing: 0.08rem;
   text-transform: none;
   color: inherit;
@@ -22,7 +23,7 @@ p.applianceCatHint {
   font-size: 0.84rem;
   line-height: 1.35;
   color: var(--textPrimary);
-  font-weight: 600;
+  font-weight: 500;
   font-style: italic;
   opacity: 0.82;
 }
@@ -31,57 +32,40 @@ select.applianceCat {
   width: 92%;
   min-height: 3.15rem;
   padding: 0.72rem 2.8rem 0.68rem 0.9rem;
-  border: none;
-  border-left: 2px solid color-mix(in srgb, var(--linkText) 62%, white 38%);
-  border-bottom: 2px solid color-mix(in srgb, var(--buttonPrimary) 54%, white 46%);
-  border-radius: 0 0 10px 10px;
-  background:
-    linear-gradient(
-        45deg,
-        transparent 50%,
-        color-mix(in srgb, var(--linkText) 62%, white 38%) 50%
-      ) calc(100% - 0.95rem) calc(50% - 2px) / 7px 7px no-repeat,
-    linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--linkText) 62%, white 38%) 50%,
-        transparent 50%
-      ) calc(100% - 0.63rem) calc(50% - 2px) / 7px 7px no-repeat;
-  background-color: transparent;
-  box-shadow: 0 6px 12px rgb(0 0 0 / 6%);
+  border: 1px solid var(--outline);
+  border-radius: 12px;
+  background-color: var(--bgSurface);
   color: var(--textPrimary);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
   letter-spacing: 0.02rem;
   line-height: 1.2;
   appearance: none;
   -webkit-appearance: none;
   transition:
-    border-color 120ms ease,
-    box-shadow 120ms ease,
-    transform 120ms ease;
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+  box-shadow: var(--shadowSoft);
 }
 
 select.applianceCat:hover {
   box-shadow:
-    0 8px 16px rgb(0 0 0 / 8%);
-  border-left-color: color-mix(in srgb, var(--linkText) 74%, white 26%);
-  border-bottom-color: color-mix(in srgb, var(--buttonPrimary) 64%, white 36%);
+    0 10px 18px rgb(0 0 0 / 10%);
+  border-color: var(--brand);
 }
 
 select.applianceCat:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--linkText) 18%, transparent 82%);
   outline-offset: 2px;
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--buttonPrimary) 10%, transparent 90%),
-    0 8px 16px rgb(0 0 0 / 8%);
-  border-left-color: color-mix(in srgb, var(--linkText) 80%, white 20%);
-  border-bottom-color: color-mix(in srgb, var(--buttonPrimary) 70%, white 30%);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 16%, transparent 84%);
   transform: translateY(-1px);
 }
 
 select.applianceCat option {
-  background-color: #fff;
-  color: #111;
+  background-color: var(--bgSurfaceSoft);
+  color: var(--textPrimary);
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.35;

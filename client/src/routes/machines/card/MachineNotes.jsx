@@ -11,17 +11,21 @@ const MachineNotes = ({
   handleSubmit,
   notes,
 }) => {
+  const safeNotes = Array.isArray(notes) ? notes : [];
+
   return (
     <div className={styles.notesBlock}>
       <h3>
         Notes{" "}
         <button
+          className={styles.noteToggle}
           onClick={() =>
             setEditing({ ...editing, notes: !editing.notes, machine: false })
           }
           type="button"
         >
           <FontAwesomeIcon icon={editing.notes ? faRotateLeft : faPenClip} />
+          <span>{editing.notes ? "Close" : "Add Note"}</span>
         </button>
       </h3>
       <ul>
@@ -34,24 +38,29 @@ const MachineNotes = ({
                 onChange={(e) => setNoteContent(e.target.value)}
                 autoFocus
               ></textarea>
-              <button type="submit">Submit</button>
+              <button type="submit">Add Note</button>
             </form>
           </li>
         )}
-        {notes
-          ?.slice()
-          .reverse()
-          .map(({ id, content, added_on, technician, machine_id }) => (
-            <li key={id}>
-              <p>{content}</p>
-              <div>
-                <p>
-                  {technician.first_name} {technician.last_name[0]}.
-                </p>
-                <p>{formatDate(added_on)}</p>
-              </div>
-            </li>
-          ))}
+        {safeNotes.length === 0 ? (
+          <li className={styles.emptyNote}>
+            <p>No notes yet. Add one to start the timeline.</p>
+          </li>
+        ) : (
+          <>
+            {safeNotes
+              .slice()
+              .reverse()
+              .map(({ id, content, added_on }) => {
+                return (
+                  <li key={id}>
+                    <p>{content}</p>
+                    <p className={styles.noteDate}>{formatDate(added_on)}</p>
+                  </li>
+                );
+              })}
+          </>
+        )}
       </ul>
     </div>
   );

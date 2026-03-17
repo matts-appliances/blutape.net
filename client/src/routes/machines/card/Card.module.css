@@ -1,24 +1,45 @@
 p.warning {
-  color: darkred;
+  color: var(--danger);
   font-size: 12px;
   text-align: center;
-  margin: 0.4rem auto;
+  margin: 0.5rem auto;
+}
+
+.cardPage {
+  width: min(860px, 94%);
+  margin: 0 auto;
+  padding: 0.5rem 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardMissing {
+  width: min(860px, 94%);
+  margin: 2rem auto;
+  text-align: center;
 }
 
 .cardHeader {
   display: flex;
-  justify-content: space-between;
-  width: 90%;
-  margin: 1rem auto;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--linkText);
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--outline);
 }
+
 .cardHeader button {
-  background-color: transparent;
+  min-width: 52px;
+  min-height: 52px;
+  background-color: color-mix(in srgb, var(--bgSurface) 88%, #fff 12%);
+  border: 1px solid var(--outline);
   box-shadow: unset;
-  border: none;
-  font-size: 1.8rem;
-  color: var(--buttonPrimary);
+  border-radius: 12px;
+  font-size: 1.6rem;
+  color: var(--textPrimary);
 }
 
 .cardHeader button:disabled {
@@ -26,164 +47,248 @@ p.warning {
 }
 
 .cardHeader button.completeMachine {
-  color: darkgreen;
+  color: var(--success);
 }
 
 .cardHeader button.trashMachine {
-  color: darkred;
+  color: var(--danger);
 }
+
 .cardHeader button.recycleMachine {
-  color: lightgoldenrodyellow;
+  color: var(--warning);
+}
+
+.statusCard {
+  display: flex;
+  justify-content: center;
 }
 
 .machineCardEditForm {
-  margin: 2rem auto;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .statusDisplay {
-  border: 3px solid #000;
+  border: 2px solid var(--outline);
   width: fit-content;
   margin: 0 auto;
-  padding: 10px 24px;
-  transform: rotate(-3deg);
-  font-weight: 600;
-  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: color-mix(in srgb, var(--bgSurface) 78%, #000 22%);
+  min-width: 150px;
+  text-align: center;
 }
+
 .ipHead {
   color: var(--textPrimary);
   border-color: var(--textPrimary);
   transform: rotate(0deg);
 }
+
 .cHead {
-  color: darkgreen;
-  border-color: darkgreen;
+  color: var(--success);
+  border-color: var(--success);
 }
+
 .tHead {
-  color: darkred;
-  border-color: darkred;
+  color: var(--danger);
+  border-color: var(--danger);
 }
+
 .eHead {
-  color: cyan;
-  border-color: cyan;
+  color: var(--warning);
+  border-color: var(--warning);
 }
 
 .machineCardEditForm ul {
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .machineCardEditForm ul li {
   color: var(--textPrimary);
-  background-color: var(--linkText);
+  background-color: var(--bgSurface);
   padding: 12px 8px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--outline);
 }
+
 .machineCardEditForm ul li p {
-  font-size: 1.2rem;
+  margin: 0;
+  font-size: 1rem;
   display: flex;
-  justify-content: space-between;
-  padding-inline: 10px;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-inline: 0.45rem;
   font-weight: 600;
-  color: var(--bannerBackground);
-}
-.machineCardEditForm ul li p span {
-  font-weight: 400;
   color: var(--textPrimary);
+}
+
+.machineCardEditForm ul li p span {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: var(--textPrimary);
+  word-break: break-word;
 }
 
 .machineCardEditForm ul li label {
   margin-left: 4px;
+  margin-bottom: 0.3rem;
+  display: inline-block;
+  color: var(--textSecondary);
 }
+
 .machineCardEditForm ul li input,
 .machineCardEditForm ul li select {
   width: 100%;
-  height: 44px;
-  border-radius: 8px;
-  font-size: 18px;
-  padding: 4px;
+  height: 46px;
+  border-radius: 10px;
+  border: 1px solid var(--outline);
+  font-size: 1.05rem;
+  padding: 4px 0.75rem;
+  color: var(--textPrimary);
+  background-color: color-mix(in srgb, var(--bgSurface) 88%, #000 12%);
 }
 
 .machineCardEditForm ul button[type="submit"] {
-  font-size: 24px;
-  padding-block: 12px;
+  font-size: 1.05rem;
+  padding-block: 11px;
+  margin-top: 0.25rem;
   align-self: center;
-  width: 80%;
-  background-color: var(--bannerBackground);
+  width: 100%;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brandSecondary) 100%);
   border-radius: 8px;
+  color: #071128;
 }
 
 .notesBlock {
-  margin: 3rem auto 2rem auto;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .notesBlock h3 {
-  background-color: var(--bannerBackground);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--bgSurface) 94%, white 6%) 0%,
+    color-mix(in srgb, var(--bgSurfaceSoft) 86%, black 14%) 100%
+  );
   color: var(--textPrimary);
-  padding: 12px 8px;
+  padding: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  border: 1px solid var(--outline);
+  border-radius: 10px 10px 0 0;
+  margin: 0;
 }
 
 .notesBlock h3 button {
   background-color: transparent;
   border: none;
   box-shadow: unset;
-  font-size: 1.6rem;
-  color: var(--linkText);
+  width: auto;
+  min-width: 106px;
+  height: 38px;
+  border-radius: 999px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: 1px solid var(--outline);
+  background: color-mix(in srgb, var(--bgSurface) 88%, #fff 12%);
+  color: var(--textSecondary);
 }
 
 .notesBlock ul {
   list-style-type: none;
-  padding: 12px;
-  background-color: var(--linkText);
-  color: var(--inputBackground);
+  padding: 0 12px;
+  background-color: var(--bgSurface);
+  color: var(--textPrimary);
+  border: 1px solid var(--outline);
+  border-radius: 0 0 10px 10px;
+  margin: 0;
 }
+
 .notesBlock ul li {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--textPrimary);
-  padding-top: 14px;
+  gap: 10px;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--textPrimary) 28%, transparent 72%);
 }
+
 .notesBlock ul li:last-child {
   border-bottom: none;
   padding-bottom: 0;
 }
 
-.notesBlock ul li > div p {
+.notesBlock ul li > p {
+  margin: 0;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--bannerBackground);
+  color: var(--textPrimary);
+  line-height: 1.4;
 }
-.notesBlock ul li > div p:last-child {
+
+.noteDate {
+  margin: 0;
+  color: var(--textSecondary);
+  font-size: 0.84rem;
   font-style: italic;
+}
+
+.emptyNote {
+  color: var(--textSecondary);
+  padding: 0.8rem 0.2rem !important;
+}
+
+.emptyNote p {
+  margin: 0;
+  color: var(--textSecondary);
 }
 
 .addNote form {
   display: flex;
   flex-direction: column;
   width: 100%;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
+  padding-bottom: 12px;
 }
+
 .addNote form textarea {
   width: 100%;
   height: 7rem;
   resize: none;
-  font-size: 18px;
+  font-size: 1.05rem;
   border-radius: 8px;
-  padding: 6px;
+  padding: 10px;
+  border: 1px solid var(--outline);
+  color: var(--textPrimary);
+  background-color: color-mix(in srgb, var(--bgSurface) 90%, #000 10%);
 }
 
 .addNote form button {
-  background-color: var(--bannerBackground);
-  color: var(--textPrimary);
-  padding: 10px 24px;
-  font-size: 20px;
-  border-radius: 6px;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brandSecondary) 100%);
+  color: #071128;
+  width: auto;
+  min-width: 124px;
+  padding: 10px 20px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--brand) 20%, transparent 80%);
+  border-radius: 999px;
 }

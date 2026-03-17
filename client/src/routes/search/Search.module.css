@@ -2,18 +2,21 @@
   display: flex;
   justify-content: center;
   margin: 1rem auto;
-  border-radius: 8px;
-  box-shadow: -1px 2px 6px var(--linkText);
+  border-radius: 10px;
+  border: 1px solid var(--outline);
   width: fit-content;
+  overflow: hidden;
+  background-color: var(--bgSurfaceSoft);
 }
 .searchToggler button {
   font-size: 2rem;
   padding: 10px 40px;
   border: none;
   width: 100%;
-  background-color: var(--linkText);
+  background-color: transparent;
   box-shadow: unset;
-  color: var(--bannerBackground);
+  color: var(--textSecondary);
+  transition: background-color 0.16s ease, color 0.16s ease;
 }
 .searchToggler button:first-child {
   border-radius: 8px 0 0 8px;
@@ -24,9 +27,8 @@
 
 .searchToggler button.activeButton {
   color: var(--textPrimary);
-  box-shadow:
-    inset 1px 1px 4px var(--bannerBackground),
-    inset -1px -1px 3px var(--bannerBackground);
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brandSecondary) 100%);
+  color: #05122d;
 }
 
 /*SEARCH READER*/
@@ -39,12 +41,14 @@
 }
 .serialSearchInput label {
   font-size: 14px;
+  color: var(--textSecondary);
+  margin-bottom: 0.2rem;
 }
 .serialSearchInput input {
-  width: 80%;
+  width: min(680px, 94%);
   font-size: 1.5rem;
   border-radius: 8px;
-  padding: 4px;
+  padding: 0.55rem 0.7rem;
 }
 
 .searchCamera {
@@ -58,30 +62,37 @@
 
 .searchCamera p {
   font-size: 14px;
+  color: var(--textSecondary);
+  margin-bottom: 0.35rem;
 }
 
 .qrFiller {
-  width: 150px;
-  height: 150px;
-  border: 1px solid black;
+  width: min(350px, 100%);
+  height: 180px;
+  border: 1px solid var(--outline);
   border-radius: 6px;
+  overflow: hidden;
 }
 
 /*MACHINE FOUND*/
 
 .machineFound {
   margin: 2rem auto;
-  width: 80%;
-  border: 1px solid var(--linkText);
+  width: min(760px, 94%);
+  border: 1px solid var(--outline);
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem;
   color: var(--textPrimary);
-  background-color: var(--bannerBackground);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--bgSurface) 96%, white 4%) 0%,
+    color-mix(in srgb, var(--bgSurfaceSoft) 82%, transparent 18%) 100%
+  );
   border-radius: 8px;
-  box-shadow: -1px 1px 6px #000;
+  box-shadow: var(--shadowSoft);
 }
 
 .machineFound > div {

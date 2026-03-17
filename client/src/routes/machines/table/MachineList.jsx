@@ -6,25 +6,28 @@ const MachineList = ({ machines, onSelectMachine }) => {
   return (
     <ul className={styles.machineList}>
       {machines?.map(
-        ({ id, brand, model, serial, color, vendor, latest_work_order }) => (
-          <li key={id} onClick={() => onSelectMachine(id)}>
-            <h2>
+        ({ id, brand, model, serial, color, vendor }) => (
+          <li
+            key={id}
+            className={styles.machineListItem}
+            onClick={() => onSelectMachine(id)}
+          >
+            <h2 className={styles.machineItemHeader}>
               {brands[brand]} - <small>[{model}]</small>
             </h2>
-            <div>
-              <p>
-                Serial: <span>{serial}</span>
+            <div className={styles.machineItemBody}>
+              <p className={styles.machineItemRow}>
+                <span className={styles.machineItemLabel}>Serial</span>
+                <span className={styles.machineItemValue}>{serial}</span>
               </p>
-              <p>
-                Color: <span>{color}</span>
+              <p className={styles.machineItemRow}>
+                <span className={styles.machineItemLabel}>Color</span>
+                <span className={styles.machineItemValue}>{color}</span>
               </p>
-              <p>
-                Vendor: <span>{VENDORS[vendor]}</span>
+              <p className={styles.machineItemRow}>
+                <span className={styles.machineItemLabel}>Vendor</span>
+                <span className={styles.machineItemValue}>{VENDORS[vendor]}</span>
               </p>
-
-              <small className={styles.machineAuthor}>
-                {latest_work_order?.initiator?.first_name ?? "Unknown"}
-              </small>
             </div>
           </li>
         ),

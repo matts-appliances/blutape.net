@@ -11,6 +11,16 @@ import socket
 import requests
 
 
+def _sanitize_zpl_value(value, max_length=40):
+    text = "" if value is None else str(value)
+    text = text.replace("\\", "")
+    text = text.replace("^", "")
+    text = text.replace("~", "")
+    text = text.replace("\r", " ")
+    text = text.replace("\n", " ")
+    return text[:max_length]
+
+
 print_bp = Blueprint("print", __name__)
 
 
@@ -119,19 +129,33 @@ URL = "http://100.71.48.104:5000/print"
 
 
 def generate_ZPL_label(data):
-    zpl = f"""
-    ^XA
-    ^FO10,25^GB775,365,6^FS
-    ^FO50, 60^A0,35^FDbluTape/ Matt's Appliances^FS
-    ^FO530, 60^A0,35^FDID: {data["id"]}^FS
-    ^FO50,105^BQN,2,9^FDLA,{data["serial"]}^FS
-    ^FO300,130^A0,35^FDBrand: {data["brand"]}^FS
-    ^FO300,175^A0,35^FDModel: {data["model"]}^FS
-    ^FO300,220^A0,35^FDSerial: {data["serial"]}^FS
-    ^FO300,265^A0,35^FDStyle: {data["form_factor"]}^FS
-    ^FO300,310^A0,35^FDColor: {data["color"]}^FS
-    ^XZ
-    """
+    machine_id = _sanitize_zpl_value(data.get("id", ""), 25)
+    brand = _sanitize_zpl_value(data.get("brand", ""), 28)
+    model = _sanitize_zpl_value(data.get("model", ""), 28)
+    serial = _sanitize_zpl_value(data.get("serial", ""), 28)
+    form_factor = _sanitize_zpl_value(data.get("form_factor", ""), 20)
+    color = _sanitize_zpl_value(data.get("color", ""), 20)
+
+    zpl = f"""^XA
+^POR
+^PW812
+^LL460
+^LH0,0
+^CF0,30
+
+^FO0,18^FB812,1,0,C,0^A0N,36,36^FDbluTape/ Matt's Appliances^FS
+^FO0,58^FB812,1,0,C,0^A0N,24,24^FDID: {machine_id}^FS
+
+^FO50,102^BQN,2,8^FDLA,{serial}^FS
+
+^FO360,112^A0N,30,30^FDBrand: {brand}^FS
+^FO360,152^A0N,30,30^FDModel: {model}^FS
+^FO360,192^A0N,30,30^FDSerial: {serial}^FS
+^FO360,232^A0N,30,30^FDStyle: {form_factor}^FS
+^FO360,272^A0N,30,30^FDColor: {color}^FS
+
+^PQ1,0,1,Y
+^XZ"""
     return zpl
 
 @print_bp.route("/label", methods=['POST'])

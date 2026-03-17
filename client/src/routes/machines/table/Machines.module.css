@@ -5,16 +5,20 @@
 }
 
 .machineTableHeader {
-  width: 90%;
+  width: min(760px, 94%);
   max-width: 1200px;
   margin: 0.75rem auto 0.5rem;
 }
 
 .controlCard {
-  border: 2px solid var(--linkText);
-  border-radius: 12px;
-  background: var(--bannerBackground);
-  box-shadow: -1px 1px 6px var(--backgroundDark);
+  border: 1px solid var(--outline);
+  border-radius: 14px;
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--bgSurface) 96%, white 4%) 0%,
+    color-mix(in srgb, var(--bgSurfaceSoft) 84%, black 16%) 100%
+  );
+  box-shadow: var(--shadowSoft);
   padding: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -45,13 +49,13 @@
 .machineTableUserSelect {
   width: 100%;
   min-height: 40px;
-  border: 1px solid var(--buttonPrimary);
-  border-radius: 8px;
+  border: 1px solid var(--outline);
+  border-radius: 10px;
   padding: 0 0.5rem;
   font-size: 0.95rem;
-  background-color: var(--bannerBackground);
+  background-color: var(--bgSurface);
   color: var(--textPrimary);
-  box-shadow: -1px 1px 4px #0006;
+  box-shadow: none;
 }
 
 .paginatorRow {
@@ -69,16 +73,16 @@
 
 .paginator button {
   min-height: 38px;
-  border-radius: 8px;
-  box-shadow: unset;
-  background-color: var(--buttonPrimary);
+  border-radius: 10px;
+  box-shadow: none;
+  background-color: var(--bgSurface);
   border: none;
   padding: 0.4rem 0.6rem;
   font-weight: 600;
 }
 
 .paginator button:disabled {
-  background-color: color-mix(in oklab, var(--buttonPrimary) 35%, transparent);
+  background-color: color-mix(in srgb, var(--bgSurface) 42%, transparent 58%);
   color: var(--textSecondary);
 }
 
@@ -105,7 +109,7 @@
 
 ul.machineList {
   list-style-type: none;
-  width: 90%;
+  width: min(760px, 94%);
   max-width: 1200px;
   display: flex;
   flex-direction: column;
@@ -113,53 +117,77 @@ ul.machineList {
 }
 
 ul.machineList li {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  background-color: var(--bannerBackground);
+  gap: 14px;
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--bgSurface) 93%, white 7%) 0%,
+    color-mix(in srgb, var(--bgSurfaceSoft) 80%, black 20%) 100%
+  );
   color: var(--textPrimary);
-  border: 3px solid var(--linkText);
+  border: 2px solid color-mix(in srgb, var(--outline) 76%, transparent 24%);
   border-radius: 8px;
-  padding: 12px 2px 20px 10px;
-  box-shadow: -1px 1px 6px var(--backgroundDark);
+  padding: 14px 12px 16px;
+  box-shadow: var(--shadowSoft);
 }
 
-ul.machineList li h2 {
-  font-size: 1.2rem;
+.machineListItem {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-ul.machineList li h2 small {
+
+.machineItemHeader {
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+.machineItemHeader small {
   font-size: 16px;
   font-weight: 500;
-  color: var(--buttonSecondary);
-}
-
-ul.machineList li div {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-ul.machineList li div p {
-  font-weight: 600;
-}
-
-ul.machineList li div p span {
-  font-weight: 400;
-  font-style: italic;
-  font-size: 14px;
-}
-
-small.machineAuthor {
-  margin-top: 0.5rem;
-  font-weight: 700;
-  text-decoration: underline;
   color: var(--textSecondary);
 }
 
+.machineItemBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.machineItemRow {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.machineItemLabel {
+  color: var(--textSecondary);
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.machineItemValue {
+  color: var(--textPrimary);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
 ul.machineList li:active {
-  box-shadow: unset;
-  background-color: var(--linkText);
+  box-shadow: none;
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--brandSecondary) 28%, var(--bgSurface) 72%) 0%,
+    color-mix(in srgb, var(--brand) 24%, var(--bgSurfaceSoft) 76%) 100%
+  );
   transform: translate(-1px, 1px);
-  color: var(--bannerBackground);
+  color: var(--textPrimary);
 }

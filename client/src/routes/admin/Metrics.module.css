@@ -6,17 +6,35 @@
   gap: 1rem;
 }
 
+.metricsHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metricsHeader h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: 0.01em;
+}
+
+.metricsHeader p {
+  margin: 0;
+  color: var(--textSecondary);
+  font-size: 0.95rem;
+}
+
 .userSelect {
   width: 100%;
-  padding: 0.9rem;
-  border: 1px solid var(--buttonPrimary);
-  border-radius: 10px;
+  padding: 0.9rem 0.75rem;
+  border: 1px solid var(--outline);
+  border-radius: 12px;
   background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--bannerBackground), #000 10%),
-    color-mix(in oklab, var(--bannerBackground), #000 18%)
+    170deg,
+    color-mix(in srgb, var(--bgSurface) 96%, white 4%) 0%,
+    color-mix(in srgb, var(--bgSurfaceSoft) 84%, black 16%) 100%
   );
-  box-shadow: -1px 1px 8px #0006;
+  box-shadow: var(--shadowSoft);
 }
 
 .metricsDateSelect {
@@ -32,20 +50,52 @@
   grid-template-columns: 1fr 1fr 1fr;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid var(--buttonPrimary);
+  border: 1px solid var(--outline);
+  background: color-mix(in srgb, var(--bgSurface) 90%, #fff 10%);
 }
 
 .metricsDateSelect button {
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   border: 0;
+  min-height: 46px;
   padding: 0.55rem 0.7rem;
   font-weight: 700;
-  background-color: var(--bannerBackground);
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bgSurfaceSoft) 80%, #fff 20%) 0%,
+    color-mix(in srgb, var(--bgSurface) 82%, #000 18%) 100%
+  );
   color: var(--textPrimary);
+  border-radius: 0;
+  transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+}
+
+.metricsDateSelect > div:first-child button:first-child {
+  border-radius: 0;
+}
+
+.metricsDateSelect > div:first-child button:last-child {
+  border-radius: 0;
 }
 
 .metricsDateSelect button + button {
-  border-left: 1px solid var(--buttonPrimary);
+  border-left: 1px solid var(--outline);
+}
+
+.shiftDayButton {
+  color: color-mix(in srgb, var(--textSecondary) 82%, #fff 18%);
+}
+
+.todayButton {
+  color: #071128;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brandSecondary) 100%);
+}
+
+.metricsDateSelect button:not(:disabled):active {
+  transform: translateY(1px) scale(0.995);
+  filter: brightness(0.98);
 }
 
 .metricsDateSelect button:disabled {
@@ -60,129 +110,42 @@
 }
 
 .metricsDateSelect div label {
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   letter-spacing: 0.03em;
   opacity: 0.9;
+  margin-left: 0.2rem;
+  text-transform: uppercase;
+  color: var(--textSecondary);
 }
 
 .metricsDateSelect div input {
-  font-size: 0.95rem;
-  height: 34px;
-  border: 1px solid var(--buttonPrimary);
+  font-size: 1rem;
+  height: 44px;
+  border: 1px solid var(--outline);
   border-radius: 8px;
   padding: 0 0.5rem;
-}
-
-.userSelect select {
-  width: 100%;
-  margin-top: 0.7rem;
-  height: 36px;
-  border: 1px solid var(--buttonPrimary);
-  border-radius: 8px;
-  padding: 0 0.5rem;
-  font-size: 0.95rem;
-}
-
-.metricsData {
-  border-top: 2px solid var(--linkText);
-  padding-top: 1.2rem;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem;
-}
-
-.metricsTitle {
-  grid-column: 1 / -1;
-  margin: 0;
-  font-size: 1.2rem;
-  letter-spacing: 0.02em;
-}
-
-.metricsData ul {
-  list-style: none;
-  margin: 0;
-  padding: 0.6rem;
-  border-radius: 10px;
-  border: 1px solid var(--buttonPrimary);
-  background-color: color-mix(in oklab, var(--bannerBackground), #000 20%);
-  box-shadow: inset 1px 1px 3px #0006;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.metricsData ul li {
-  border: 1px solid color-mix(in oklab, var(--buttonPrimary), #fff 12%);
-  border-radius: 8px;
-  width: 100%;
+  background: var(--bgSurface);
   color: var(--textPrimary);
-  background-color: color-mix(in oklab, var(--bannerBackground), #000 8%);
-  padding: 0.5rem 0.6rem;
 }
 
-.metricsData ul > li:first-child {
-  border: none;
-  background: transparent;
-  padding: 0.2rem 0.1rem 0.35rem 0.1rem;
+.userSelectLabel {
+  margin: 0.65rem 0.1rem 0.25rem;
+  display: inline-block;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--textSecondary);
 }
 
-.metricsData ul p {
-  margin: 0;
-}
-
-.metricsData ul p:first-child {
-  font-weight: 700;
-  font-size: 0.95rem;
-  margin-bottom: 0.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-}
-
-.metricsData ul p:not(:first-child) {
-  color: color-mix(in oklab, var(--textPrimary), #000 16%);
-  font-size: 0.85rem;
-}
-
-.metricsData ul p.machineListDate {
-  font-size: 0.75rem;
-  opacity: 0.86;
-}
-
-.metricsData ul li p:first-child span {
-  margin-left: 0.45rem;
-  color: var(--linkText);
-}
-
-ul.completedMachines {
-  background-color: color-mix(in oklab, darkgreen, #000 18%);
-}
-
-ul.completedMachines li {
-  border-color: color-mix(in oklab, greenyellow, #000 20%);
-}
-
-ul.eventsList {
-  background-color: color-mix(in oklab, var(--bannerBackground), #000 20%);
-  max-height: 540px;
-  overflow-y: auto;
-}
-
-ul.eventsList li {
-  border-color: color-mix(in oklab, var(--buttonPrimary), #fff 12%);
-}
-
-ul.trashedMachines {
-  background-color: color-mix(in oklab, darkred, #000 18%);
-}
-
-ul.trashedMachines li {
-  border-color: color-mix(in oklab, #ff6b6b, #000 15%);
-}
-
-svg.gotomachine {
-  cursor: pointer;
+.userSelectControl {
+  width: 100%;
+  height: 46px;
+  border: 1px solid var(--outline);
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  font-size: 1rem;
+  color: var(--textPrimary);
+  background: var(--bgSurface);
 }
 
 .exportActions {
@@ -198,12 +161,13 @@ svg.gotomachine {
 .printMetricsButton {
   flex: 1;
   min-width: 0;
-  font-size: 1.3rem;
+  font-size: 1.05rem;
+  gap: 0.45rem;
   background-color: transparent;
   color: var(--textPrimary);
-  height: 48px;
-  width: 48px;
-  padding: 0;
+  min-height: 46px;
+  width: auto;
+  padding: 0 0.9rem;
   border-radius: 10px;
   border: 1px solid var(--textPrimary);
   box-shadow: none;
@@ -211,15 +175,157 @@ svg.gotomachine {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.exportLabel {
+  font-size: 0.72rem;
+}
+
+.metricsData {
+  border-top: 2px solid var(--outline);
+  padding-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.metricsTitle {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+}
+
+.metricsData ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--outline);
+  background-color: color-mix(in srgb, var(--bgSurface) 80%, #000 20%);
+  box-shadow: var(--shadowSoft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metricsData ul li {
+  border: 1px solid color-mix(in srgb, var(--outline) 86%, transparent 14%);
+  border-radius: 8px;
+  width: 100%;
+  color: var(--textPrimary);
+  background-color: color-mix(in srgb, var(--bgSurfaceSoft) 86%, black 14%);
+  padding: 0.5rem 0.6rem;
+}
+
+.metricsData ul > li:first-child {
+  border: none;
+  background: transparent;
+  padding: 0.2rem 0.1rem 0.35rem 0.1rem;
+}
+
+.metricsData ul p {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.metricsData ul p:first-child {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.metricsData ul p:not(:first-child) {
+  color: color-mix(in srgb, var(--textPrimary), #000 16%);
+  font-size: 0.85rem;
+}
+
+.metricsData ul p.machineListDate {
+  font-size: 0.75rem;
+  opacity: 0.86;
+}
+
+.metricsData ul li p:first-child span {
+  margin-left: 0.45rem;
+  color: var(--linkText);
+}
+
+.iconAction {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.35rem;
+  margin-top: 0.05rem;
+}
+
+ul.completedMachines {
+  background-color: color-mix(in srgb, var(--success) 22%, var(--bgSurface) 78%);
+}
+
+ul.completedMachines li {
+  border-color: color-mix(in srgb, var(--success) 60%, transparent 40%);
+}
+
+ul.eventsList {
+  background-color: color-mix(in srgb, #3b2b7c 28%, var(--bgSurface) 72%);
+  max-height: 540px;
+  overflow-y: auto;
+}
+
+ul.eventsList li {
+  border-color: color-mix(in srgb, var(--outline) 76%, transparent 24%);
+}
+
+ul.trashedMachines {
+  background-color: color-mix(in srgb, var(--danger) 22%, var(--bgSurface) 78%);
+}
+
+ul.trashedMachines li {
+  border-color: color-mix(in srgb, #ff6b6b 56%, transparent 44%);
+}
+
+svg.gotomachine {
+  cursor: pointer;
 }
 
 @media (max-width: 780px) {
+  .metricsContainer {
+    gap: 0.9rem;
+  }
+
   .metricsData {
     grid-template-columns: 1fr;
   }
 
   .metricsDateSelect {
     grid-template-columns: 1fr;
+  }
+
+  .metricsDateSelect button {
+    min-height: 44px;
+  }
+
+  .exportActions {
+    margin-top: 0.75rem;
+    gap: 0.65rem;
+  }
+
+  .exportLabel {
+    display: none;
+  }
+
+  .printMetricsButton {
+    min-height: 44px;
+    width: 48px;
+    padding-inline: 0;
   }
 }
 

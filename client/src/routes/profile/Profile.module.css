@@ -1,72 +1,117 @@
 .profileContainer {
-  width: min(560px, 92%);
+  width: min(560px, 94%);
   margin: 1.5rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.profileHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0 0.2rem;
 }
 
 .profileContainer h1 {
-  margin: 0 0 0.8rem 0;
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: 0.01em;
+}
+
+.profileHeader p {
+  margin: 0;
+  color: var(--textSecondary);
+  font-size: 0.95rem;
 }
 
 .profileForm {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  padding: 1rem;
-  border: 1px solid var(--buttonPrimary);
-  border-radius: 10px;
-  background-color: color-mix(in oklab, var(--bannerBackground), #000 12%);
+  gap: 0.65rem;
+  padding: 1rem 0.95rem;
+  border: 1px solid var(--outline);
+  border-radius: 12px;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--bgSurface) 96%, white 4%) 0%,
+    color-mix(in srgb, var(--bgSurfaceSoft) 84%, black 16%) 100%
+  );
   color: var(--textPrimary);
 }
 
 .profileForm label {
-  font-size: 0.86rem;
-  opacity: 0.9;
+  margin-left: 0.1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--textSecondary);
 }
 
 .profileForm input {
-  height: 36px;
-  border: 1px solid var(--buttonPrimary);
-  border-radius: 8px;
-  padding: 0 0.55rem;
-  font-size: 0.95rem;
-  margin-bottom: 0.55rem;
+  height: 46px;
+  border: 1px solid var(--outline);
+  border-radius: 10px;
+  padding: 0 0.75rem;
+  font-size: 1rem;
+  color: var(--textPrimary);
+  background-color: color-mix(in srgb, var(--bgSurface) 88%, #000 12%);
+  margin-bottom: 0.15rem;
 }
 
 .profileForm button {
-  margin-top: 1rem;
-  font-size: 2rem;
-  border-radius: 8px;
-  padding: 0.85rem 1rem;
+  margin-top: 0.75rem;
+  min-height: 48px;
+  font-size: 1.05rem;
+  border-radius: 10px;
+  padding: 0.72rem 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #071128;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brandSecondary) 100%);
+}
+
+.profileForm button:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.1);
+  cursor: not-allowed;
 }
 
 .profileDangerZone {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid color-mix(in oklab, #8d3340, var(--buttonPrimary) 35%);
-  border-radius: 10px;
-  background: color-mix(in oklab, var(--backgroundDark), #8d3340 10%);
+  padding: 0.95rem;
+  margin-top: 0.25rem;
+  border: 1px solid color-mix(in srgb, #8d3340 46%, var(--outline) 54%);
+  border-radius: 12px;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, #301722 66%, transparent 34%) 0%,
+    color-mix(in srgb, #4a1f33 82%, transparent 18%) 100%
+  );
   color: var(--textPrimary);
 }
 
 .profileDangerZone p {
-  margin-bottom: 0.8rem;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  margin: 0 0 0.85rem;
+  color: color-mix(in srgb, var(--textPrimary) 92%, #fff 8%);
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 .logoutButton {
   width: 100%;
-  border: 1px solid color-mix(in oklab, #d26a77, var(--backgroundDark) 30%);
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, #d26a77 52%, transparent 48%);
   border-radius: 8px;
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, #a84857, #fff 12%) 0%,
-    color-mix(in oklab, #7e2f3d, #000 8%) 100%
+    color-mix(in srgb, #a84857 68%, #fff 32%) 0%,
+    color-mix(in srgb, #7e2f3d 74%, #000 26%) 100%
   );
   color: var(--textPrimary);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  padding: 0.85rem 1rem;
+  padding: 0.75rem 1rem;
   box-shadow: none;
 }

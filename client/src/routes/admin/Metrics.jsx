@@ -143,6 +143,11 @@ const Metrics = () => {
 
   return (
     <div className={styles.metricsContainer}>
+      <div className={styles.metricsHeader}>
+        <h1>Metrics</h1>
+        <p>Choose a technician and date range to review their activity.</p>
+      </div>
+
       <div className={styles.userSelect}>
         <div className={styles.metricsDateSelect}>
           <div>
@@ -160,6 +165,7 @@ const Metrics = () => {
               prev
             </button>
             <button
+              className={styles.todayButton}
               onClick={() =>
                 setParams((prev) => ({
                   ...prev,
@@ -191,6 +197,7 @@ const Metrics = () => {
           <div>
             <label htmlFor="start_date">Start Date</label>
             <input
+              id="start_date"
               type="date"
               name="start_date"
               value={params.start_date}
@@ -202,6 +209,7 @@ const Metrics = () => {
           <div>
             <label htmlFor="end_date">End Date</label>
             <input
+              id="end_date"
               type="date"
               name="end_date"
               value={params.end_date}
@@ -212,10 +220,15 @@ const Metrics = () => {
           </div>
         </div>
         <div>
+          <label className={styles.userSelectLabel} htmlFor="userID">
+            Technician
+          </label>
           <select
+            id="userID"
             name="userID"
             value={params.user_id}
             onChange={handleUserChange}
+            className={styles.userSelectControl}
           >
             <option value="">--select user--</option>
             {users.map(({ id, first_name, last_name }) => (
@@ -231,12 +244,14 @@ const Metrics = () => {
               className={styles.printMetricsButton}
               onClick={() => exportReport("csv")}
             >
+              <span className={styles.exportLabel}>CSV</span>
               <FontAwesomeIcon icon={faFileCsv} />
             </button>
             <button
               className={styles.printMetricsButton}
               onClick={() => exportReport("pdf")}
             >
+              <span className={styles.exportLabel}>PDF</span>
               <FontAwesomeIcon icon={faFilePdf} />
             </button>
           </div>
@@ -277,7 +292,7 @@ const Metrics = () => {
                   </p>
                   <p>
                     machine:<small>[{machine_id}]</small>
-                    <span>
+                    <span className={styles.iconAction}>
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${machine_id}`)}
@@ -306,7 +321,7 @@ const Metrics = () => {
                 <li key={id}>
                   <p>
                     {brands[brand]} {form_factor ?? style}{" "}
-                    <span>
+                    <span className={styles.iconAction}>
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${id}`)}
@@ -339,7 +354,7 @@ const Metrics = () => {
                 <li key={id}>
                   <p>
                     {brands[brand]} {form_factor ?? style}{" "}
-                    <span>
+                    <span className={styles.iconAction}>
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${id}`)}
@@ -372,7 +387,7 @@ const Metrics = () => {
                 <li key={id}>
                   <p>
                     {brands[brand]} {form_factor ?? style}{" "}
-                    <span>
+                    <span className={styles.iconAction}>
                       <FontAwesomeIcon
                         icon={faEye}
                         onClick={() => navigate(`/machine/${id}`)}

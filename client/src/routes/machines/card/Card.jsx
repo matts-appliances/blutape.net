@@ -90,18 +90,20 @@ const Card = () => {
 
   if (!machine) {
     return (
-      <div>
+      <div className={styles.cardMissing}>
         <h2>Machine not found</h2>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className={styles.cardPage}>
       <div className={styles.cardHeader}>
         <MachineActions actions={actions} />
       </div>
-      <MachineStatusBadge currentStatus={machine.current_status} />
+      <div className={styles.statusCard}>
+        <MachineStatusBadge currentStatus={machine.current_status} />
+      </div>
       <MachineDetailsForm
         machine={machine}
         editingMachine={editing.machine}

@@ -8,17 +8,19 @@
 
 .statusLabel {
   font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--textSecondary);
   opacity: 0.9;
 }
 
 .statusSelect {
   width: 100%;
-  min-height: 40px;
-  border: 1px solid var(--buttonPrimary);
-  border-radius: 8px;
-  padding: 0 0.5rem;
+  min-height: 44px;
+  border: 1px solid var(--outline);
+  border-radius: 10px;
+  padding: 0 0.6rem;
   font-size: 0.95rem;
-  background-color: var(--bannerBackground);
+  background-color: var(--bgSurface);
   color: var(--textPrimary);
-  box-shadow: -1px 1px 4px #0006;
+  box-shadow: none;
 }
