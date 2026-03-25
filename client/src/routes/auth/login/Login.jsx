@@ -1,9 +1,9 @@
-import styles from "./Login.module.css";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { requestJson } from "../../../utils/api";
+import styles from "../AuthCard.module.css";
 
 const Login = () => {
   const { setUser } = useAuth();
@@ -30,11 +30,13 @@ const Login = () => {
   };
 
   return (
-    <section className={styles.loginShell}>
-      <form onSubmit={handleSubmit} className={styles.loginForm}>
-        <h1>Welcome back</h1>
-        <p>Sign in to continue.</p>
-        <div>
+    <section className={styles.authShell}>
+      <form onSubmit={handleSubmit} className={styles.authCard}>
+        <div className={styles.authHeader}>
+          <h1>Welcome back</h1>
+          <p>Sign in to continue.</p>
+        </div>
+        <div className={styles.fieldGroup}>
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -45,7 +47,7 @@ const Login = () => {
             autoComplete="username"
           />
         </div>
-        <div>
+        <div className={styles.fieldGroup}>
           <label htmlFor="password">Password</label>
           <div className={styles.passwordField}>
             <input
@@ -66,6 +68,12 @@ const Login = () => {
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
+        </div>
+        <div className={styles.supportRow}>
+          <p className={styles.note}>Use your work email to sign in.</p>
+          <Link to="/forgot-password" className={styles.textLink}>
+            Forgot password?
+          </Link>
         </div>
         <button type="submit" className={styles.submitButton}>
           Login

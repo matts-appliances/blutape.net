@@ -9,7 +9,9 @@ import ProtectedRoutes from "./layout/ProtectedLayout";
 import AdminRoutes from "./layout/AdminRoutes";
 import Home from "./routes/home/Home";
 import Login from "./routes/auth/login/Login";
+import ForgotPassword from "./routes/auth/forgot-password/ForgotPassword";
 import Register from "./routes/auth/register/Register";
+import ResetPassword from "./routes/auth/reset-password/ResetPassword";
 import Machines from "./routes/machines/table/Machines";
 import Card from "./routes/machines/card/Card";
 import Search from "./routes/search/Search";
@@ -33,6 +35,8 @@ const App = () => {
         </Route>
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
       </Route>
     )
   );

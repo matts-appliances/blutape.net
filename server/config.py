@@ -39,6 +39,13 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_DEFAULT_SENDER = "cameron@mattsappliancesla.net"
     ADMIN_EMAIL = environ.get("ADMIN_EMAIL", "cameron@mattsappliancesla.net")
+    APP_BASE_URL = environ.get(
+        "APP_BASE_URL",
+        "https://blutape.net" if FLASK_ENV == "production" else "http://localhost:5173",
+    )
+    PASSWORD_RESET_TOKEN_MAX_AGE = int(
+        environ.get("PASSWORD_RESET_TOKEN_MAX_AGE", "3600")
+    )
 
     MANIFEST_DESTINY_INTEGRATION_KEY = environ.get("MANIFEST_DESTINY_INTEGRATION_KEY")
     MANIFEST_DESTINY_BASE_URL = environ.get(

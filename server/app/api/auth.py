@@ -1,9 +1,13 @@
+import hashlib
+from urllib.parse import quote
+
 from flask import Blueprint, jsonify, request, session, current_app
 from app.extensions import db, bcrypt
 from app.models import User
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime, timezone
-from itsdangerous import URLSafeTimedSerializer
+from flask_mailman import EmailMessage
+from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -13,6 +17,48 @@ def _manifest_access_serializer():
     if not secret:
         raise RuntimeError("MANIFEST_DESTINY_ACCESS_SECRET is not configured")
     return URLSafeTimedSerializer(secret_key=secret, salt="manifest-destiny-access")
+
+
+def _password_reset_serializer():
+    return URLSafeTimedSerializer(
+        secret_key=current_app.config["SECRET_KEY"],
+        salt="password-reset",
+    )
+
+
+def _password_reset_fingerprint(user):
+    return hashlib.sha256(user.password_hash.encode("utf-8")).hexdigest()
+
+
+def _build_password_reset_link(token):
+    base_url = (current_app.config.get("APP_BASE_URL") or request.host_url).rstrip("/")
+    return f"{base_url}/reset-password?token={quote(token)}"
+
+
+def _load_password_reset_user(token):
+    try:
+        payload = _password_reset_serializer().loads(
+            token,
+            max_age=current_app.config.get("PASSWORD_RESET_TOKEN_MAX_AGE", 3600),
+        )
+    except SignatureExpired as exc:
+        raise ValueError("This reset link has expired. Request a new one.") from exc
+    except BadSignature as exc:
+        raise ValueError("This reset link is invalid. Request a new one.") from exc
+
+    user_id = payload.get("user_id")
+    fingerprint = payload.get("fingerprint")
+    if not user_id or not fingerprint:
+        raise ValueError("This reset link is invalid. Request a new one.")
+
+    user = db.session.get(User, user_id)
+    if not user or not user.is_active:
+        raise ValueError("This reset link is no longer valid. Request a new one.")
+
+    if fingerprint != _password_reset_fingerprint(user):
+        raise ValueError("This reset link is no longer valid. Request a new one.")
+
+    return user
 
 
 @auth_bp.post("/register")
@@ -95,6 +141,106 @@ def login():
     except Exception as e:
         current_app.logger.error(f"[LOGIN ERROR]: {e}")
         return jsonify(success=False, message="There was an error when logging in"), 500
+
+
+@auth_bp.post("/forgot-password")
+def forgot_password():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify(success=False, message="No payload in request"), 400
+
+        email = (data.get("email") or "").strip().lower()
+        if not email:
+            return jsonify(success=False, message="email is required"), 400
+
+        generic_message = (
+            "If an account exists for that email, a reset link has been sent."
+        )
+        user = db.session.query(User).filter_by(email=email).first()
+        if not user or not user.is_active:
+            current_app.logger.info(
+                f"[PASSWORD RESET REQUEST]: No active user found for {email}"
+            )
+            return jsonify(success=True, message=generic_message), 200
+
+        token = _password_reset_serializer().dumps(
+            {
+                "user_id": user.id,
+                "fingerprint": _password_reset_fingerprint(user),
+            }
+        )
+        reset_link = _build_password_reset_link(token)
+
+        msg = EmailMessage(
+            subject="Reset your bluTape password",
+            body=(
+                f"Hi {user.first_name},\n\n"
+                "We received a request to reset your bluTape password.\n\n"
+                f"Use this link to choose a new password:\n{reset_link}\n\n"
+                "If you did not request this change, you can ignore this email."
+            ),
+            to=[user.email],
+        )
+        msg.send()
+
+        current_app.logger.info(
+            f"[PASSWORD RESET REQUEST]: Sent reset link to {user.email}"
+        )
+        return jsonify(success=True, message=generic_message), 200
+    except Exception as e:
+        current_app.logger.error(f"[PASSWORD RESET REQUEST ERROR]: {e}")
+        return jsonify(success=False, message="Unable to send reset link"), 500
+
+
+@auth_bp.get("/reset-password/validate")
+def validate_reset_password():
+    try:
+        token = (request.args.get("token") or "").strip()
+        if not token:
+            return jsonify(success=False, message="token is required"), 400
+
+        _load_password_reset_user(token)
+        return jsonify(success=True, message="Reset link is valid."), 200
+    except ValueError as e:
+        return jsonify(success=False, message=str(e)), 400
+    except Exception as e:
+        current_app.logger.error(f"[PASSWORD RESET VALIDATION ERROR]: {e}")
+        return jsonify(success=False, message="Unable to validate reset link"), 500
+
+
+@auth_bp.post("/reset-password")
+def reset_password():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify(success=False, message="No payload in request"), 400
+
+        token = (data.get("token") or "").strip()
+        password1 = data.get("password1") or ""
+        password2 = data.get("password2") or ""
+
+        if not token:
+            return jsonify(success=False, message="token is required"), 400
+        if not password1 or not password2:
+            return jsonify(success=False, message="Both password fields are required"), 400
+        if password1 != password2:
+            return jsonify(success=False, message="Passwords do not match"), 400
+
+        user = _load_password_reset_user(token)
+        user.password_hash = bcrypt.generate_password_hash(password1).decode("utf-8")
+        db.session.commit()
+
+        current_app.logger.info(
+            f"[PASSWORD RESET]: Password updated for {user.email} at {datetime.now(timezone.utc)}"
+        )
+        return jsonify(success=True, message="Password updated. You can sign in now."), 200
+    except ValueError as e:
+        return jsonify(success=False, message=str(e)), 400
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"[PASSWORD RESET ERROR]: {e}")
+        return jsonify(success=False, message="Unable to reset password"), 500
     
     
 @auth_bp.route("/logout", methods=["GET"])
