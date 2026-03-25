@@ -51,10 +51,15 @@ const MachineNotes = ({
             {safeNotes
               .slice()
               .reverse()
-              .map(({ id, content, added_on }) => {
+              .map(({ id, content, added_on, technician }) => {
                 return (
                   <li key={id}>
                     <p>{content}</p>
+                    <p>
+                      <small>
+                        {technician.first_name} {technician.last_name[0]}.
+                      </small>
+                    </p>
                     <p className={styles.noteDate}>{formatDate(added_on)}</p>
                   </li>
                 );

@@ -22,6 +22,10 @@ class MachineNote(Base):
             "content": self.content,
             "added_on": self.added_on.strftime("%Y-%m-%d"),
             "technician_id": self.technician_id,
-            "machine_id": self.machine_id
+            "machine_id": self.machine_id,
+            "technician": {
+                "first_name": self.technician.first_name,
+                "last_name": self.technician.last_name
+            }
         }
     
