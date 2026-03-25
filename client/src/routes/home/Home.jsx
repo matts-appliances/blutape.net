@@ -1,6 +1,6 @@
 import MachineBar from "../../components/MachineBar";
 import styles from "./Home.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { brands, colors } from "../../utils/Schemas";
 import {
   MACHINE_CONDITIONS,
@@ -10,10 +10,13 @@ import {
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { requestJson } from "../../utils/api";
+import { useAuth } from "../../context/AuthContext";
 
 const Home = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [applianceCategory, setApplianceCategory] = useState(""); // category
+  const [staleMachineCount, setStaleMachineCount] = useState(0);
   const [formData, setFormData] = useState({
     brand: "",
     model: "",
@@ -39,6 +42,32 @@ const Home = () => {
       </option>
     ));
   };
+
+  useEffect(() => {
+    const fetchStaleMachineCount = async () => {
+      if (!user?.id) {
+        setStaleMachineCount(0);
+        return;
+      }
+
+      try {
+        const params = new URLSearchParams({
+          user_id: String(user.id),
+          status: "in_progress",
+          stale_only: "true",
+          stale_days: "3",
+          per_page: "1",
+        });
+        const data = await requestJson(`/api/read/machines?${params.toString()}`);
+        setStaleMachineCount(data.total_items ?? 0);
+      } catch (error) {
+        console.error("[STALE MACHINE COUNT ERROR]: ", error);
+        setStaleMachineCount(0);
+      }
+    };
+
+    fetchStaleMachineCount();
+  }, [user?.id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -73,6 +102,15 @@ const Home = () => {
           setApplianceCategory={setApplianceCategory}
         />
       </div>
+      {staleMachineCount > 0 && (
+        <button
+          type="button"
+          className={styles.staleReviewBanner}
+          onClick={() => navigate("/machines?status=in_progress&stale_only=true&stale_days=3")}
+        >
+          You have {staleMachineCount} stale {staleMachineCount === 1 ? "machine" : "machines"} that {staleMachineCount === 1 ? "needs" : "need"} review.
+        </button>
+      )}
       <br />
       <hr />
       <form className={styles.machineFormHome} onSubmit={handleSubmit}>

@@ -2,13 +2,20 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getMachines, getUsers } from "./machineTableApi";
 
-export const useMachinesTable = (initialUserID = "") => {
+export const useMachinesTable = ({
+  initialUserID = "",
+  initialMachineStatus = "in_progress",
+  initialStaleOnly = false,
+  initialStaleDays = 3,
+} = {}) => {
   const [userID, setUserID] = useState(initialUserID);
-  const [machineStatus, setMachineStatus] = useState("in_progress");
+  const [machineStatus, setMachineStatus] = useState(initialMachineStatus);
   const [machines, setMachines] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [users, setUsers] = useState([]);
+  const [staleOnly, setStaleOnly] = useState(initialStaleOnly);
+  const [staleDays] = useState(initialStaleDays);
 
   const handleUserChange = (e) => {
     setUserID(e.target.value);
@@ -17,6 +24,15 @@ export const useMachinesTable = (initialUserID = "") => {
 
   const handleMachineStatusChange = (status) => {
     setMachineStatus(status);
+    if (status !== "in_progress") {
+      setStaleOnly(false);
+    }
+    setPage(1);
+  };
+
+  const clearStaleFilter = () => {
+    setMachineStatus("in_progress");
+    setStaleOnly(false);
     setPage(1);
   };
 
@@ -37,7 +53,13 @@ export const useMachinesTable = (initialUserID = "") => {
   useEffect(() => {
     const fetchMachines = async () => {
       try {
-        const data = await getMachines({ userID, machineStatus, page });
+        const data = await getMachines({
+          userID,
+          machineStatus,
+          page,
+          staleOnly,
+          staleDays,
+        });
         setMachines(data.machines);
         setTotalPages(data.total_pages);
       } catch (error) {
@@ -46,7 +68,7 @@ export const useMachinesTable = (initialUserID = "") => {
       }
     };
     fetchMachines();
-  }, [machineStatus, page, userID]);
+  }, [machineStatus, page, staleDays, staleOnly, userID]);
 
   return {
     userID,
@@ -55,8 +77,11 @@ export const useMachinesTable = (initialUserID = "") => {
     page,
     totalPages,
     users,
+    staleOnly,
+    staleDays,
     setPage,
     handleUserChange,
     handleMachineStatusChange,
+    clearStaleFilter,
   };
 };

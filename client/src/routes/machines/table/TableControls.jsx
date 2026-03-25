@@ -10,6 +10,9 @@ const TableControls = ({
   setPage,
   machineStatus,
   handleMachineStatusChange,
+  staleOnly,
+  staleDays,
+  clearStaleFilter,
 }) => {
   return (
     <div className={styles.machineTableHeader}>
@@ -56,6 +59,17 @@ const TableControls = ({
             </button>
           </div>
         </div>
+        {staleOnly && (
+          <div className={styles.filterNotice}>
+            <div className={styles.filterCopy}>
+              <strong>Review Queue Active</strong>
+              <span>Showing in-progress machines opened {staleDays}+ days ago.</span>
+            </div>
+            <button type="button" onClick={clearStaleFilter}>
+              Show all active
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from flask import Blueprint, current_app, jsonify, request
 from flask_login import current_user, login_required
@@ -19,6 +19,12 @@ def _parse_iso_date(value: str | None):
         return date.fromisoformat(value)
     except ValueError:
         return None
+
+
+def _parse_bool(value: str | None) -> bool:
+    if value is None:
+        return False
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _build_machine_payload(machine: Machine, latest_work_order: WorkOrder | None, include_machine_notes: bool = False):
@@ -82,8 +88,27 @@ def get_machines():
     try:
         user_id = request.args.get("user_id", type=int)
         status_raw = (request.args.get("status") or "").strip().lower()
+        stale_only = _parse_bool(request.args.get("stale_only"))
+        stale_days = request.args.get("stale_days", 3, type=int)
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 8, type=int)
+
+        if stale_days is None or stale_days < 1:
+            return jsonify(success=False, message="stale_days must be a positive integer"), 400
+
+        status = None
+        if status_raw:
+            try:
+                status = StatusEnum(status_raw)
+            except ValueError:
+                return jsonify(success=False, message="Invalid status filter"), 400
+
+        stale_cutoff_date = None
+        if stale_only:
+            if status and status != StatusEnum.IN_PROGRESS:
+                return jsonify(success=False, message="stale_only can only be used with in_progress status"), 400
+            status = StatusEnum.IN_PROGRESS
+            stale_cutoff_date = date.today() - timedelta(days=stale_days)
 
         latest_work_order_id = (
             select(func.max(WorkOrder.id))
@@ -105,12 +130,11 @@ def get_machines():
         if user_id:
             query = query.filter(WorkOrder.initiated_by == user_id)
 
-        if status_raw:
-            try:
-                status = StatusEnum(status_raw)
-            except ValueError:
-                return jsonify(success=False, message="Invalid status filter"), 400
+        if status:
             query = query.filter(WorkOrder.current_status == status)
+
+        if stale_cutoff_date:
+            query = query.filter(WorkOrder.initiated_on <= stale_cutoff_date)
 
         pagination = query.paginate(page=page, per_page=per_page, error_out=False)
         rows = pagination.items
@@ -123,6 +147,9 @@ def get_machines():
             page=page,
             total_pages=pagination.pages,
             total_items=pagination.total,
+            stale_only=stale_only,
+            stale_days=stale_days if stale_only else None,
+            stale_cutoff_date=stale_cutoff_date.isoformat() if stale_cutoff_date else None,
         ), 200
     except Exception as e:
         current_app.logger.error(f"[MACHINE QUERY ERROR]: {e}")

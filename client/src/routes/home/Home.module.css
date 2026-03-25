@@ -3,6 +3,24 @@
   justify-content: center;
 }
 
+.staleReviewBanner {
+  width: min(760px, 94%);
+  margin: 1rem auto 0;
+  padding: 0.95rem 1rem;
+  border: 1px solid color-mix(in srgb, #b53a2d 44%, transparent 56%);
+  border-radius: 14px;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, #ffe3de 88%, white 12%) 0%,
+    color-mix(in srgb, #ffd2ca 94%, white 6%) 100%
+  );
+  color: #7a2119;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  box-shadow: var(--shadowSoft);
+}
+
 .machineFormHome {
   width: min(760px, 94%);
   margin: 2rem auto;
