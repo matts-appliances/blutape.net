@@ -34,8 +34,11 @@ export const TYPES = {
 };
 
 export const ROLES = {
-  technician: "Technician",
   admin: "Admin",
+  cleaner: "Cleaner",
+  delivery: "Delivery",
+  sales: "Sales",
+  technician: "Technician",
 };
 
 export const APPLIANCE_CATEGORIES = {
