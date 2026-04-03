@@ -19,6 +19,9 @@ def _enum_column(enum_cls, name: str):
 
 class RoleEnum(str, Enum):
     TECHNICIAN = "technician"
+    SALES = "sales"
+    DELIVERY = "delivery" 
+    CLEANER = "cleaner"
     ADMIN = "admin"
     
     def __str__(self):
