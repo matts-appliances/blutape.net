@@ -102,7 +102,7 @@ def export_machines():
 #--------------------------
 #   SOCKET TO PI
 #--------------------------
-PiIP = "100.71.48.104"
+PiIP = "100.93.5.85"
 PiPORT = 5555
 def send_to_pi(zpl:str) -> None:
     payload = zpl.encode("utf-8")
@@ -122,10 +122,10 @@ def send_to_pi(zpl:str) -> None:
 #   PRINT LABELS
 #   NEED TO HOOK UP ONCE DEPLOYED
 #--------------------------
-PRINTER_IP = "100.71.48.104"
+PRINTER_IP = "100.93.5.85"
 ZEBRA_IP = "192.168.1.153"
 PRINTER_PORT = 5000
-URL = "http://100.71.48.104:5000/print"
+URL = "http://100.93.5.85:5000/print"
 
 
 def generate_ZPL_label(data):
